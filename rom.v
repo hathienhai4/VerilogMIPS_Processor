@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-`define FILE "test.bin"
+`define FILE "read_file.mem"
 
 module rom(i_addr, o_data);
 parameter DATA_WIDTH = 32;
@@ -27,7 +27,7 @@ parameter ROM_BLOCK = 2**10;
 
 input [ADDR_WIDTH - 1 : 0] i_addr;
 output reg [DATA_WIDTH - 1 : 0] o_data;
-reg [DATA_WIDTH - 1 : 0] mem [0 : ROM_BLOCK - 1];
+reg [DATA_WIDTH - 1 : 0] mem [ROM_BLOCK - 1 : 0];
 initial begin : INIT
     integer i;
     for(i = 0;i < ROM_BLOCK; i = i + 1) begin
@@ -35,6 +35,7 @@ initial begin : INIT
     end
     $readmemh(`FILE,mem);
 end
+
 always @(i_addr) begin
     if(i_addr > ROM_BLOCK)
         o_data = {DATA_WIDTH{1'b0}};
