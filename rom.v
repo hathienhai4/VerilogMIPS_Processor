@@ -23,8 +23,8 @@
 module rom(i_addr, o_data);
 parameter DATA_WIDTH = 32;
 parameter ADDR_WIDTH = 32;
-parameter ROM_BLOCK = 2**10;
-
+parameter ROM_BLOCK = 2**12;
+wire [11:0] index; 
 input [ADDR_WIDTH - 1 : 0] i_addr;
 output reg [DATA_WIDTH - 1 : 0] o_data;
 reg [DATA_WIDTH - 1 : 0] mem [ROM_BLOCK - 1 : 0];
@@ -35,11 +35,11 @@ initial begin : INIT
     end
     $readmemh(`FILE,mem);
 end
-
-always @(i_addr) begin
-    if(i_addr > ROM_BLOCK)
+assign index = i_addr[11:0];
+always @(index) begin
+    if( (index >> 2) > ROM_BLOCK)
         o_data = {DATA_WIDTH{1'b0}};
     else
-        o_data = mem[i_addr];
+        o_data = mem[index >> 2];
 end
 endmodule
