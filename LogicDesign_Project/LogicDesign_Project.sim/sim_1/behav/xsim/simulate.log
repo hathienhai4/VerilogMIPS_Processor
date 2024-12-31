@@ -1,0 +1,7 @@
+Time resolution is 1 ps
+Time | MemWrite | MemRead | Address | WriteData | ReadData
+                   0 |    0    |    0    | 0x00000000   | 0x00000000      | 0xxxxxxxxx
+                5000 |    1    |    0    | 0x00000004   | 0xaabbccdd      | 0xxxxxxxxx
+               15000 |    0    |    1    | 0x00000004   | 0xaabbccdd      | 0xaabbccdd
+               25000 |    1    |    1    | 0x00000008   | 0x11223344      | 0x00000000
+$finish called at time : 55 ns : File "E:/LogicDesign_Project/LogicDesign_Project/LogicDesign_Project.srcs/sim_1/new/DM_tb.v" Line 58
