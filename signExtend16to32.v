@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 12/19/2024 12:46:29 PM
+// Create Date: 12/20/2024 09:21:16 PM
 // Design Name: 
-// Module Name: adder_4bit
+// Module Name: signExtend16to32
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,14 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module adder_32bit(
-    input [31:0] a,
-    input [31:0] b,
-    input carry_in,
-    output [31:0] sum,
-    output c_out
+module signExtend16to32(
+    input [15:0] a,
+    output reg [31:0] out
     );
-    wire [1:0] carry; // carry signal
-    adder_16bit add0(a[15:0], b[15:0], carry_in, sum[15:0], carry[0]);
-    adder_16bit add1(a[31:16], b[31:16], carry[0], sum[31:16], c_out);       
+    always@(a)
+    begin
+    out[15:0] = a[15:0];
+    out[31:16] = {16{a[15]}};
+    end
 endmodule

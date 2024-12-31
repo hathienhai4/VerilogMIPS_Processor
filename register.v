@@ -18,20 +18,50 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
-
+`define REG_FILE "REG.mem"
+`define REG "reg.hex"
 module register(
+input clk,
 input [4:0] read_reg1,
 input [4:0] read_reg2,
 input [4:0] write_reg,
 input [31:0] write_data,
 input RegWrite,
-output [31:0] read_data1,
-output [31:0] read_data2
+output reg [31:0] read_data1,
+output reg [31:0] read_data2
     );
     reg [31:0] registers [31:0]; // 32 thanh ghi 32-bit
+    initial begin
+        $readmemh(`REG_FILE, registers);
+    end
     
-    assign read_data1 = registers[read_addr1];
-    assign read_data2 = registers[read_addr2];
-        
+    always @(*)begin
+//    $display("read_reg1: %b", read_reg1);
+//    $display("read_data1: %b", registers[read_reg1]);
+        read_data1 <= registers[read_reg1];
+        read_data2 <= registers[read_reg2];
+//        if (RegWrite == 1'b1)  
+//            registers[write_reg] <= write_data;
+//        read_data1 <= read_reg1;
+//        read_data2 <= read_reg2;
+        $display("at time: %t, write: %b",$time, write_data);
+    end    
+    always @(posedge clk) begin
+        if (RegWrite == 1'b1) begin   
+              registers[write_reg] <= write_data;
+//            read_data1 = registers[write_reg];
+//            $display("at time: %t, read_reg1: %b",$time, write_reg);
+//            $display("at time: %t, read_data1: %b",$time, registers[write_reg]);
+            $display("at time: %t, write: %b",$time, write_data);
+        end        
+    end
+
+    integer i, file;
+    always @(*) begin
+        file = $fopen("reg.hex","w");
+        for(i = 0; i < 32; i = i + 1) begin
+            $fwrite(file,"%h\n",registers[i]);
+        end
+        $fclose(file);
+    end    
 endmodule
