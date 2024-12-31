@@ -29,7 +29,8 @@ input [31:0] i_data;
 output [31:0] o_reg1;
 output [31:0] o_reg2;
 integer i;
-integer file;
+integer file_1;
+integer file_2;
 reg [31:0]registers[31:0]; 
 assign o_reg1 = (i_reg1 == 0) ? 32'd0 : registers[i_reg1];
 assign o_reg2 = (i_reg2 == 0) ? 32'd0 : registers[i_reg2];
@@ -46,13 +47,19 @@ always @(posedge i_clk or posedge i_arst) begin
        registers[i] <= registers[i]; 
     end    
    end
-   file = $fopen("D:\\HDL Design\\register_values.txt", "w");
-   if(file == 0) 
-       $display("Error open file\n");
+   file_1 = $fopen("D:\\HDL Design\\register_values.txt", "w");
+   file_2 = $fopen("D:\\HDL Design\\MIPS_Project\\MIPS_Project.srcs\\sim_1\\new\\register_values.txt","w");
+   if(file_1 == 0) 
+       $display("Error open file 1\n");
+   if(file_2 == 0) 
+       $display("Error open file 2\n");
    for(i = 0;i < 32; i = i + 1) begin
-        $fwrite(file, "Register[%0d] = %h\n", i, registers[i]);
+        $fwrite(file_1, "Register[%0d] = %h\n", i, registers[i]);
+        $fwrite(file_2, "%h\n", registers[i]);
    end
-   $fwrite(file,"\n");
-   $fclose(file);
+   $fwrite(file_1,"\n");
+   $fwrite(file_2,"\n");
+   $fclose(file_1);
+   $fclose(file_2);
 end
 endmodule
