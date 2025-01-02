@@ -23,35 +23,35 @@
 module cpu(
 input clk,
 output reg [31:0] cpu_IM_out,
-output reg [31:0] cpu_Control_input,
-output reg [31:0] cpu_reg1,
-output reg [31:0] cpu_reg2,
-output reg [31:0] cpu_RegDst,
-output reg [31:0] cpu_write_reg,
+output reg [5:0] cpu_Control_input,
+output reg [4:0] cpu_reg1,
+output reg [4:0] cpu_reg2,
+output reg cpu_RegDst,
+output reg [4:0] cpu_write_reg,
 output reg [31:0] cpu_write_data,
-output reg [31:0] cpu_RegWrite,
+output reg cpu_RegWrite,
 output reg [31:0] cpu_read_reg1,
 output reg [31:0] cpu_read_reg2,
-output reg [31:0] cpu_sign_extend_input,
-output reg [31:0] cpu_ALUSrc,
+output reg [15:0] cpu_sign_extend_input,
+output reg cpu_ALUSrc,
 output reg [31:0] cpu_oprd1,
 output reg [31:0] cpu_oprd2,
-output reg [31:0] cpu_ALUOp,
-output reg [31:0] cpu_ALU_Operation,
-output reg [31:0] cpu_zero,
+output reg [1:0] cpu_ALUOp,
+output reg [3:0] cpu_ALU_Operation,
+output reg cpu_zero,
 output reg [31:0] cpu_ALU_result,
 output reg [31:0] cpu_adder0,
 output reg [31:0] cpu_adder1,
-output reg [31:0] cpu_Branch,
+output reg cpu_Branch,
 output reg [31:0] cpu_Jump_addr,
-output reg [31:0] cpu_PCSrc,
-output reg [31:0] cpu_Jump,
+output reg cpu_PCSrc,
+output reg cpu_Jump,
 output reg [31:0] cpu_pc_next,
 output reg [31:0] cpu_write_mem,
 output reg [31:0] cpu_addr_mem,
 output reg [31:0] cpu_MemRead,
-output reg [31:0] cpu_MemWrite,
-output reg [31:0] cpu_MemtoReg,
+output reg cpu_MemWrite,
+output reg cpu_MemtoReg,
 output reg [31:0] cpu_read_mem
     );
     
@@ -67,7 +67,8 @@ wire [31:0] IM_out;
 Instruction_memory IM0 (.addr(pc_out), .instruction(IM_out));
 
 wire [31:0] pc_next;
-adder_32bit ADD0 (.a(pc_out), .b(32'b100), .carry_in(32'b0), .sum(adder0),.c_out());
+wire [31:0] carry_out[0:5];
+adder_32bit ADD0 (.a(pc_out), .b(32'b100), .carry_in(32'b0), .sum(adder0),.c_out(carry_out[0]));
 
 wire RegDst;
 wire Branch;
@@ -106,7 +107,7 @@ mux_32bit MUX1 (.control(ALUSrc), .in1(read_data[1]), .in2(sign_extend_out), .ou
 wire [31:0] shift_left;
 wire [31:0] adder1;
 ShiftLeft_2bit SHIFT1 (.a(sign_extend_out), .out(shift_left));
-adder_32bit ADD1 (.a(adder0), .b(shift_left), .carry_in(32'b0), .sum(adder1),.c_out());
+adder_32bit ADD1 (.a(adder0), .b(shift_left), .carry_in(32'b0), .sum(adder1),.c_out(carry_out[1]));
 
 wire [3:0] ALU_Operation;
 ALUControl AC0 (.ALUOp(ALUOp), .Function(IM_out[5:0]), .ALU_Operation(ALU_Operation));
@@ -131,7 +132,6 @@ mux_32bit MUX4 (.control(MemtoReg), .in1(ALU_result), .in2(read_mem), .out(write
 
              
 always @(posedge clk) begin
-//    $display("time: %t",$time);
     pc_in <= pc_next;
     cpu_IM_out <= IM_out;
     cpu_Control_input <= IM_out[31:26];

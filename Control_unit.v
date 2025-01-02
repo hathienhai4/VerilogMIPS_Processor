@@ -42,7 +42,7 @@ module Control_unit(
         ALUOp = 0;
         ALUSrc = 0;
         RegWrite = 0;
-
+        Jump = 0;
         case (control)
             6'b000000: begin // Lệnh R-type
                 RegDst = 1;    // Ghi vào rd
