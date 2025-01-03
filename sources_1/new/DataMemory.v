@@ -22,7 +22,7 @@
 module DataMemory(
     input MemWrite, MemRead, clk,
     input [31:0] Address, WriteData,
-    output reg [31:0] ReadData
+    output [31:0] ReadData
     );
     
     reg [31:0] DMemory [1023:0];
@@ -36,17 +36,8 @@ module DataMemory(
             DMemory[i] <= 32'b0;
         end            
     end
-    always @(MemRead or Address or WriteData)
-    begin
-        if (MemRead == 1'b1)
-        begin
-            ReadData = DMemory[{2'b00,Address[31:2]}];
-//            $display("memory address",Address);
-//            $display("memory",DMemory[Address[31:2]]);
-        end
-        
-    end    
-    always @(MemWrite or Address or WriteData)
+    assign ReadData = (MemRead == 1'b1) ? DMemory[{2'b00, Address[31:2]}] : 32'bz;    
+    always @(posedge clk)
     begin
         if (MemWrite == 1'b1)
         begin

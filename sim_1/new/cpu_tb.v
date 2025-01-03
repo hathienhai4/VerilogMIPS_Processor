@@ -1,4 +1,4 @@
-`timescale 1ns / 100ps
+`timescale 1ps / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -92,6 +92,6 @@ initial begin
 clk = 0;
 forever #1 clk = ~clk;
 end
-initial #80 $finish;
+initial #5000 $finish;
     
 endmodule

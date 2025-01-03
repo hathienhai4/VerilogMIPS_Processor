@@ -61,8 +61,7 @@ output reg [31:0] cpu_IM_out
     );
     
 reg [31:0] pc_in = 32'h00000000;
-wire [31:0] pc_out;
-reg [31:0] internal_clk = 32'b0;  
+wire [31:0] pc_out; 
 PC_counter PC (.pc_in(pc_in), .pc_out(pc_out));
 
 wire [31:0] adder0;

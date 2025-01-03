@@ -21,16 +21,10 @@
 
 
 module mux_5bit(
-input control,
-input [4:0] in1,
-input [4:0] in2,
-output reg [4:0] out
-    );
-    always @(*) begin
-    out = 5'b00000;
-    case(control)
-    1'b0: out = in1;
-    1'b1: out = in2;
-    endcase
-    end
+    input control,
+    input [4:0] in1,
+    input [4:0] in2,
+    output [4:0] out
+);
+    assign out = (control == 1'b0) ? in1 : in2;
 endmodule

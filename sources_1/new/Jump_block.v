@@ -21,11 +21,10 @@
 
 
 module Jump_block(
-input [31:0] pc,
-input [31:0] shift_instruction,
-output reg [31:0] jump_addr
-    );
-always @(*) begin
-    jump_addr <= {pc[31:28],shift_instruction[27:0]};
-end     
+    input [31:0] pc,
+    input [31:0] shift_instruction,
+    output [31:0] jump_addr
+);
+    assign jump_addr = {pc[31:28], shift_instruction[27:0]};
 endmodule
+

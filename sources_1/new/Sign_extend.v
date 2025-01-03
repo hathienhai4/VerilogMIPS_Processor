@@ -21,11 +21,9 @@
 
 
 module Sign_extend(
-input [15:0] in,        // Đầu vào 16-bit
-output reg [31:0] out   // Đầu ra 32-bit sau khi mở rộng
+    input [15:0] in,        // Đầu vào 16-bit
+    output [31:0] out      // Đầu ra 32-bit sau khi mở rộng
 );
-    always @(*) begin
-        // Nếu bit MSB của đầu vào là 1, mở rộng bằng 1. Nếu không, mở rộng bằng 0.
-        out = {{16{in[15]}}, in}; // Lặp bit MSB (in[15]) để mở rộng
-    end
+    // Đầu ra out được gán ngay lập tức.
+    assign out = {{16{in[15]}}, in}; // Lặp bit MSB (in[15]) để mở rộng
 endmodule

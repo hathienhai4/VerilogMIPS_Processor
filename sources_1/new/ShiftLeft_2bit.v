@@ -22,10 +22,8 @@
 
 module ShiftLeft_2bit(
     input [31:0] a,
-    output reg [31:0] out
-    );
-    always@(a)
-    begin
-    out = a << 2;
-    end
+    output [31:0] out
+);
+    assign out = a << 2;
 endmodule
+

@@ -22,88 +22,37 @@
 
 module Control_unit(
     input [5:0] control,
-    output reg RegDst,
-    output reg Branch,
-    output reg MemtoReg,
-    output reg MemWrite,
-    output reg MemRead,
-    output reg [1:0] ALUOp,
-    output reg ALUSrc,
-    output reg RegWrite,
-    output reg Jump //j and jal only
+    output wire RegDst,
+    output wire Branch,
+    output wire MemtoReg,
+    output wire MemWrite,
+    output wire MemRead,
+    output wire [1:0] ALUOp,
+    output wire ALUSrc,
+    output wire RegWrite,
+    output wire Jump
     );
-        always @(control) begin
-        // Mặc định tín hiệu đều ở mức 0
-        RegDst = 0;
-        Branch = 0;
-        MemtoReg = 0;
-        MemWrite = 0;
-        MemRead = 0;
-        ALUOp = 0;
-        ALUSrc = 0;
-        RegWrite = 0;
-        Jump = 0;
-        case (control)
-            6'b000000: begin // Lệnh R-type
-                RegDst = 1;    // Ghi vào rd
-                RegWrite = 1;  // Cho phép ghi
-                ALUOp = 2'b10;     // Điều khiển ALU (theo funct)
-            end
 
-            6'b100011: begin // lw (load word)
-                MemtoReg = 1;  // Dữ liệu từ memory
-                MemRead = 1;   // Đọc từ bộ nhớ
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b00;
-            end
+    // Gán giá trị cho các tín hiệu đầu ra dựa trên giá trị của `control`
+    assign RegDst   = (control == 6'b000000);                           // Lệnh R-type
+    assign Branch   = (control == 6'b000100);                           // Lệnh beq
+    assign MemtoReg = (control == 6'b100011);                           // Lệnh lw
+    assign MemWrite = (control == 6'b101011);                           // Lệnh sw
+    assign MemRead  = (control == 6'b100011);                           // Lệnh lw
+    assign ALUSrc   = (control == 6'b100011) || (control == 6'b101011) || 
+                      (control == 6'b001000) || (control == 6'b001100) || 
+                      (control == 6'b001101) || (control == 6'b001111) || 
+                      (control == 6'b001001);                           // Immediate operations
+    assign RegWrite = (control == 6'b000000) || (control == 6'b100011) || 
+                      (control == 6'b001000) || (control == 6'b001100) || 
+                      (control == 6'b001101) || (control == 6'b001111) || 
+                      (control == 6'b001001);                           // Lệnh ghi vào thanh ghi
+    assign Jump     = (control == 6'b000010);                           // Lệnh jump
 
-            6'b101011: begin // sw (store word)
-                MemWrite = 1;  // Ghi vào bộ nhớ
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                ALUOp = 2'b00;
-            end
+    // Điều khiển ALU
+    assign ALUOp = (control == 6'b000000) ? 2'b10 :                     // R-type
+                   (control == 6'b000100) ? 2'b01 :                     // beq
+                   (control == 6'b001101) ? 2'b11 :                     // ori
+                   2'b00;                                              // Các lệnh còn lại (addi, andi, lui, ...)
 
-            6'b000100: begin // beq (branch if equal)
-                Branch = 1;    // Thực hiện nhánh
-                ALUOp = 2'b01;     // Điều khiển ALU tính hiệu số (so sánh)
-            end
-
-            6'b001000: begin // addi (add immediate)
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b00;
-            end
-
-            6'b001100: begin // andi (and immediate)
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b00;     // Điều khiển ALU thực hiện phép `AND`
-            end
-            6'b000010: begin // jump
-                Jump = 1;
-            end
-            6'b001101: begin // ori (OR immediate)
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b11; // Điều khiển ALU thực hiện phép OR
-            end
-            
-            6'b001111: begin // lui (load upper immediate)
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b10; // Cần thêm logic trong ALU để dịch trái 16 bit
-            end
-            
-            6'b001001: begin // addiu (add immediate unsigned)
-                ALUSrc = 1;    // Toán hạng 2 là immediate
-                RegWrite = 1;  // Ghi vào thanh ghi
-                ALUOp = 2'b00; // Điều khiển ALU thực hiện phép cộng
-            end 
-
-            default: begin // Opcode không xác định
-                // Các tín hiệu mặc định đã được thiết lập ở mức 0.
-            end
-        endcase
-    end
 endmodule

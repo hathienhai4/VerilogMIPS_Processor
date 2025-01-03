@@ -19,34 +19,32 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module ALU(
     input [31:0] oprd1,
     input [31:0] oprd2,
     input [3:0] option,
-    output reg zero,
-    output reg [31:0] result
+    output wire zero,
+    output wire [31:0] result
 );
-    always @(*) begin
-        case (option)
-            4'b0000: result = oprd1 & oprd2;            // AND
-            4'b0001: result = oprd1 | oprd2;            // OR
-            4'b0010: result = oprd1 + oprd2;            // ADD
-            4'b0011: result = oprd1 ^ oprd2;            // XOR
-            4'b0100: result = oprd1 << oprd2;           // SLL (Logical Shift Left)
-            4'b0101: result = oprd1 >> oprd2;           // SRL (Logical Shift Right)
-            4'b0110: result = oprd1 - oprd2;            // SUBTRACT
-            4'b0111: result = (oprd1 < oprd2) ? 1 : 0;  // SET LESS THAN (SLT)
-            4'b1000: result = oprd1 * oprd2;            // MULTIPLY
-            4'b1001: result = oprd1 / oprd2;            // DIVIDE
-            4'b1010: result = $signed(oprd1) >>> oprd2; // SRA (Arithmetic Shift Right)
-            4'b1100: result = ~(oprd1 | oprd2);         // NOR
-            4'b1111: result = oprd1;                   // MOVE
-            default: result = 32'b0;                    // Default case: 0
-        endcase
-        
-        // Cập nhật cờ zero
-        zero = (result == 32'b0) ? 1'b1 : 1'b0;
-    end    
+
+    // Kết quả của phép toán
+    assign result = (option == 4'b0000) ? (oprd1 & oprd2) :            // AND
+                    (option == 4'b0001) ? (oprd1 | oprd2) :            // OR
+                    (option == 4'b0010) ? (oprd1 + oprd2) :            // ADD
+                    (option == 4'b0011) ? (oprd1 ^ oprd2) :            // XOR
+                    (option == 4'b0100) ? (oprd1 << oprd2[4:0]) :      // SLL (Logical Shift Left)
+                    (option == 4'b0101) ? (oprd1 >> oprd2[4:0]) :      // SRL (Logical Shift Right)
+                    (option == 4'b0110) ? (oprd1 - oprd2) :            // SUBTRACT
+                    (option == 4'b0111) ? ((oprd1 < oprd2) ? 32'b1 : 32'b0) : // SLT
+                    (option == 4'b1000) ? (oprd1 * oprd2) :            // MULTIPLY
+                    (option == 4'b1001) ? (oprd1 / oprd2) :            // DIVIDE
+                    (option == 4'b1010) ? $signed(oprd1) >>> oprd2[4:0] : // SRA (Arithmetic Shift Right)
+                    (option == 4'b1100) ? ~(oprd1 | oprd2) :           // NOR
+                    (option == 4'b1111) ? oprd1 :                      // MOVE
+                    32'b0;                                             // Default case: 0
+    
+    // Cờ zero: bằng 1 nếu `result` bằng 0
+    assign zero = (result == 32'b0);
+
 endmodule
 
