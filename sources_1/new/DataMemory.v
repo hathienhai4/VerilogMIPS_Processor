@@ -11,7 +11,6 @@
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -19,34 +18,48 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+`define MEM_FILE "DM.mem"
 module DataMemory(
-    input MemWrite, MemRead,
+    input MemWrite, MemRead, clk,
     input [31:0] Address, WriteData,
     output reg [31:0] ReadData
     );
     
-    reg [31:0] DMemory [9999:0];
-    integer i, baseAddr, offset;
+    reg [31:0] DMemory [1023:0];
+    integer i, baseAddr, offset, file;
 //    wire [31:0] DM_Addr = Address[31:0];
     initial
     begin
-        for (i = 0; i < 10000; i = i + 1)
+        $readmemh(`MEM_FILE, DMemory);
+        for (i = 100; i < 1024; i = i + 1)
         begin
             DMemory[i] <= 32'b0;
         end            
     end
-    
-    always @(WriteData or Address or MemRead or MemWrite)
+    always @(MemRead or Address or WriteData)
     begin
         if (MemRead == 1'b1)
         begin
-            ReadData = DMemory[Address];
+            ReadData = DMemory[{2'b00,Address[31:2]}];
+//            $display("memory address",Address);
+//            $display("memory",DMemory[Address[31:2]]);
         end
+        
+    end    
+    always @(MemWrite or Address or WriteData)
+    begin
         if (MemWrite == 1'b1)
         begin
-            DMemory[Address] <= WriteData;
+            DMemory[{2'b00,Address[31:2]}] = WriteData;
+            $display("Time :",$time);
+            $display("write data",WriteData);
+            $display("write addr",Address[31:2]);
+            file = $fopen("D:\\Vivado project\\Vivado_output\\mem_file.txt","w");
+            for(i = 0; i < 1024; i = i + 1) begin
+                $fwrite(file,"%h\n",DMemory[i]);
+            end
+            $fclose(file);
         end
-    end
-//    assign ReadData = (MemRead == 1'b1) ? DMemory[DM_Addr] : 32'b0;
+        
+    end 
 endmodule

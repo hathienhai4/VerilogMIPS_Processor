@@ -18,14 +18,15 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
+`define SIMULATION
 
 module cpu(
+`ifdef SIMULATION
 input clk,
 output reg [31:0] cpu_IM_out,
-//output reg [5:0] cpu_Control_input,
-//output reg [4:0] cpu_reg1,
-//output reg [4:0] cpu_reg2,
+output reg [5:0] cpu_Control_input,
+output reg [4:0] cpu_reg1,
+output reg [4:0] cpu_reg2,
 output reg cpu_RegDst,
 //output reg [4:0] cpu_write_reg,
 output reg [31:0] cpu_write_data,
@@ -48,16 +49,20 @@ output reg cpu_PCSrc,
 output reg cpu_Jump,
 output reg [31:0] cpu_pc_next,
 output reg [31:0] cpu_write_mem,
-//output reg [31:0] cpu_addr_mem,
+output reg [31:0] cpu_addr_mem,
 output reg cpu_MemRead,
 output reg cpu_MemWrite,
 output reg cpu_MemtoReg,
 output reg [31:0] cpu_read_mem
+`else
+input clk,
+output reg [31:0] cpu_IM_out   
+`endif
     );
     
-reg [31:0] pc_in = 32'b0;
+reg [31:0] pc_in = 32'h00000000;
 wire [31:0] pc_out;
-  
+reg [31:0] internal_clk = 32'b0;  
 PC_counter PC (.pc_in(pc_in), .pc_out(pc_out));
 
 wire [31:0] adder0;
@@ -124,7 +129,7 @@ mux_32bit MUX2 (.control(PCSrc), .in1(adder0), .in2(adder1), .out(pc_addr));
 mux_32bit MUX3 (.control(Jump), .in1(pc_addr), .in2(jump_addr), .out(pc_next));
 
 wire [31:0] read_mem;
-DataMemory DM0 (.MemWrite(MemWrite), .MemRead(MemRead),
+DataMemory DM0 (.MemWrite(MemWrite), .MemRead(MemRead),.clk(clk),
     .Address(ALU_result), .WriteData(read_data[1]),
     .ReadData(read_mem));
     
@@ -132,11 +137,12 @@ mux_32bit MUX4 (.control(MemtoReg), .in1(ALU_result), .in2(read_mem), .out(write
 
              
 always @(posedge clk) begin
+`ifdef SIMULATION
     pc_in <= pc_next;
     cpu_IM_out <= IM_out;
-//    cpu_Control_input <= IM_out[31:26];
-//    cpu_reg1 <= IM_out[25:21];
-//    cpu_reg2 <= IM_out[20:16];
+    cpu_Control_input <= IM_out[31:26];
+    cpu_reg1 <= IM_out[25:21];
+    cpu_reg2 <= IM_out[20:16];
     cpu_RegDst <= RegDst;
 //    cpu_write_reg <= write_reg;
     cpu_write_data <= write_data;
@@ -159,10 +165,14 @@ always @(posedge clk) begin
     cpu_Jump  <= Jump;
     cpu_pc_next  <= pc_next;
     cpu_write_mem  <= read_data[1];
-//    cpu_addr_mem  <= ALU_result;
+    cpu_addr_mem  <= ALU_result;
     cpu_MemRead  <= MemRead;
     cpu_MemWrite  <= MemWrite;
     cpu_MemtoReg  <= MemtoReg;
-    cpu_read_mem  <= read_mem; 
+    cpu_read_mem  <= read_mem;
+`else
+    pc_in <= pc_next;
+    cpu_IM_out <= IM_out;
+`endif 
 end   
 endmodule

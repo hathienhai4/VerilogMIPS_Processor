@@ -1,4 +1,4 @@
-`timescale 1ns / 10ps
+`timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -23,9 +23,9 @@
 module cpu_tb;
 reg clk;
 wire [31:0] IM_out;
-//wire [5:0] Control_input;
-//wire [4:0] reg1;
-//wire [4:0] reg2;
+wire [5:0] Control_input;
+wire [4:0] reg1;
+wire [4:0] reg2;
 wire RegDst;
 //wire [4:0] write_reg;
 wire [31:0] write_data;
@@ -48,7 +48,7 @@ wire PCSrc;
 wire Jump;
 wire [31:0] pc_next;
 wire [31:0] write_mem;
-//wire [31:0] addr_mem;
+wire [31:0] addr_mem;
 wire MemRead;
 wire MemWrite;
 wire MemtoReg;
@@ -56,9 +56,9 @@ wire [31:0] read_mem;
 cpu UUT(
 clk,
 IM_out,
-//Control_input,
-//reg1,
-//reg2,
+Control_input,
+reg1,
+reg2,
 RegDst,
 //write_reg,
 write_data,
@@ -81,7 +81,7 @@ PCSrc,
 Jump,
 pc_next,
 write_mem,
-//addr_mem,
+addr_mem,
 MemRead,
 MemWrite,
 MemtoReg,
@@ -90,8 +90,8 @@ read_mem
 
 initial begin
 clk = 0;
-forever #10 clk = ~clk;
+forever #1 clk = ~clk;
 end
-initial #120 $finish;
+initial #80 $finish;
     
 endmodule

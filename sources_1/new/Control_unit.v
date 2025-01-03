@@ -83,6 +83,24 @@ module Control_unit(
             6'b000010: begin // jump
                 Jump = 1;
             end
+            6'b001101: begin // ori (OR immediate)
+                ALUSrc = 1;    // Toán hạng 2 là immediate
+                RegWrite = 1;  // Ghi vào thanh ghi
+                ALUOp = 2'b11; // Điều khiển ALU thực hiện phép OR
+            end
+            
+            6'b001111: begin // lui (load upper immediate)
+                ALUSrc = 1;    // Toán hạng 2 là immediate
+                RegWrite = 1;  // Ghi vào thanh ghi
+                ALUOp = 2'b10; // Cần thêm logic trong ALU để dịch trái 16 bit
+            end
+            
+            6'b001001: begin // addiu (add immediate unsigned)
+                ALUSrc = 1;    // Toán hạng 2 là immediate
+                RegWrite = 1;  // Ghi vào thanh ghi
+                ALUOp = 2'b00; // Điều khiển ALU thực hiện phép cộng
+            end 
+
             default: begin // Opcode không xác định
                 // Các tín hiệu mặc định đã được thiết lập ở mức 0.
             end
