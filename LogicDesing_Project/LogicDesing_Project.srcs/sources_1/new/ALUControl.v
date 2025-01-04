@@ -47,6 +47,7 @@ module ALUControl(
                                (Function == 6'b001101) ? 4'b0001 : // ori
                                (Function == 6'b001110) ? 4'b0011 : // xori
                                (Function == 6'b001111) ? 4'b1101 : // lui
+                               (Function == 6'b000101) ? 4'b1110 : // bne
                                4'bxxxx // undefined
                            ) :
                            4'bxxxx; // undefined

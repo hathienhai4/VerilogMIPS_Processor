@@ -32,32 +32,31 @@ output reg cpu_RegDst,
 output reg [31:0] cpu_write_data,
 output reg cpu_RegWrite,
 output reg [31:0] cpu_read_reg1,
-output reg [31:0] cpu_read_reg2,
+output reg [31:0] cpu_read_reg2
 //output reg [15:0] cpu_sign_extend_input,
-output reg cpu_ALUSrc,
-output reg [31:0] cpu_oprd1,
-output reg [31:0] cpu_oprd2,
-output reg [1:0] cpu_ALUOp,
-output reg [3:0] cpu_ALU_Operation,
-output reg cpu_zero,
-output reg [31:0] cpu_ALU_result,
+//output reg cpu_ALUSrc,
+//output reg [31:0] cpu_oprd1,
+//output reg [31:0] cpu_oprd2,
+//output reg [1:0] cpu_ALUOp,
+//output reg [3:0] cpu_ALU_Operation,
+//output reg cpu_zero,
+//output reg [31:0] cpu_ALU_result,
 //output reg [31:0] cpu_adder0,
 //output reg [31:0] cpu_adder1,
-output reg cpu_Branch,
-output reg [31:0] cpu_Jump_addr,
-output reg cpu_PCSrc,
-output reg cpu_Jump,
-output reg [31:0] cpu_pc_next,
-output reg [31:0] cpu_write_mem,
-output reg [31:0] cpu_addr_mem,
-output reg cpu_MemRead,
-output reg cpu_MemWrite,
-output reg cpu_MemtoReg,
-output reg [31:0] cpu_read_mem
+//output reg cpu_Branch,
+//output reg [31:0] cpu_Jump_addr,
+//output reg cpu_PCSrc,
+//output reg cpu_Jump,
+//output reg [31:0] cpu_pc_next,
+//output reg [31:0] cpu_write_mem,
+//output reg [31:0] cpu_addr_mem,
+//output reg cpu_MemRead,
+//output reg cpu_MemWrite,
+//output reg cpu_MemtoReg,
+//output reg [31:0] cpu_read_mem
 `else
 input clk,
-output reg [31:0] cpu_IM_out ,  
-output reg [31:0] cpu_pc_next
+output reg [31:0] cpu_IM_out
 `endif
     );
     
@@ -99,8 +98,6 @@ mux_5bit MUX0 (.control(RegDst), .in1(IM_out[20:16]), .in2(IM_out[15:11]), .out(
               
 wire [31:0] read_data [1:0];
 wire [31:0] write_data;
-//edit
-
 
 register REG0 (.clk(clk), .read_reg1(IM_out[25:21]), .read_reg2(IM_out[20:16]),
                .write_reg(write_reg), .write_data(write_data),.RegWrite(RegWrite),
@@ -110,7 +107,6 @@ wire [31:0] sign_extend_out;
 Sign_extend SE0 (.in(IM_out[15:0]), .out(sign_extend_out));
 
 wire [31:0] oprd2;
-//editr
 mux_32bit MUX1 (.control(ALUSrc), .in1(read_data[1]), .in2(sign_extend_out), .out(oprd2));
 
 wire [31:0] shift_left;
@@ -164,26 +160,26 @@ always @(posedge clk) begin
     cpu_read_reg1 <= read_data[0];
     cpu_read_reg2 <= read_data[1];
 //    cpu_sign_extend_input  <= IM_out[15:0];
-    cpu_ALUSrc  <= ALUSrc;
-    cpu_oprd1  <= read_data[0];
-    cpu_oprd2  <= oprd2;
-    cpu_ALUOp  <= ALUOp;
-    cpu_ALU_Operation  <= ALU_Operation;
-    cpu_zero  <= zero;
-    cpu_ALU_result  <= ALU_result;
+//    cpu_ALUSrc  <= ALUSrc;
+//    cpu_oprd1  <= read_data[0];
+//    cpu_oprd2  <= oprd2;
+//    cpu_ALUOp  <= ALUOp;
+//    cpu_ALU_Operation  <= ALU_Operation;
+//    cpu_zero  <= zero;
+//    cpu_ALU_result  <= ALU_result;
 //    cpu_adder0  <= adder0;
 //    cpu_adder1  <= adder1;
-    cpu_Branch  <= Branch;
-    cpu_Jump_addr  <= jump_addr;
-    cpu_PCSrc  <= PCSrc;
-    cpu_Jump  <= Jump;
-    cpu_pc_next  <= pc_next;
-    cpu_write_mem  <= read_data[1];
-    cpu_addr_mem  <= ALU_result;
-    cpu_MemRead  <= MemRead;
-    cpu_MemWrite  <= MemWrite;
-    cpu_MemtoReg  <= MemtoReg;
-    cpu_read_mem  <= read_mem;
+//    cpu_Branch  <= Branch;
+//    cpu_Jump_addr  <= jump_addr;
+//    cpu_PCSrc  <= PCSrc;
+//    cpu_Jump  <= Jump;
+//    cpu_pc_next  <= pc_next;
+//    cpu_write_mem  <= read_data[1];
+//    cpu_addr_mem  <= ALU_result;
+//    cpu_MemRead  <= MemRead;
+//    cpu_MemWrite  <= MemWrite;
+//    cpu_MemtoReg  <= MemtoReg;
+//    cpu_read_mem  <= read_mem;
 `else
     pc_in <= pc_next;
     cpu_IM_out <= IM_out;
