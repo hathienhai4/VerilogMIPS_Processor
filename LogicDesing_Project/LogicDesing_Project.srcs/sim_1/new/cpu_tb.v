@@ -109,7 +109,7 @@ wire [31:0] read_reg1;
 wire [31:0] read_reg2;
 //wire [15:0] sign_extend_input;
 wire ALUSrc;
-//wire [31:0] oprd1;
+wire [31:0] oprd1;
 wire [31:0] oprd2;
 wire [1:0] ALUOp;
 wire [3:0] ALU_Operation;
@@ -142,7 +142,7 @@ read_reg1,
 read_reg2,
 //sign_extend_input,
 ALUSrc,
-//oprd1,
+oprd1,
 oprd2,
 ALUOp,
 ALU_Operation,
@@ -167,6 +167,6 @@ initial begin
 clk = 0;
 forever #1 clk = ~clk;
 end
-initial #150 $finish;
+initial #110 $finish;
     
 endmodule

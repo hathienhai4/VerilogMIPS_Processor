@@ -32,8 +32,8 @@ module ALU(
                     (option == 4'b0001) ? (oprd1 | oprd2) :            // OR
                     (option == 4'b0010) ? (oprd1 + oprd2) :            // ADD
                     (option == 4'b0011) ? (oprd1 ^ oprd2) :            // XOR
-                    (option == 4'b0100) ? (oprd1 << oprd2[10:6]) :      // SLL (Logical Shift Left)
-                    (option == 4'b0101) ? (oprd1 >> oprd2[10:6]) :      // SRL (Logical Shift Right)
+                    (option == 4'b0100) ? (oprd2 << oprd1[4:0]) :      // SLL (Logical Shift Left)
+                    (option == 4'b0101) ? (oprd2 >> oprd1[4:0]) :      // SRL (Logical Shift Right)
                     (option == 4'b0110) ? (oprd1 - oprd2) :            // SUBTRACT
                     (option == 4'b0111) ? (((oprd1 < oprd2) && (oprd1[31] == oprd2[31]) || (oprd1[31] > oprd2[31])) ? 32'b1 : 32'b0) : // SLT
                     (option == 4'b1000) ? (oprd1 * oprd2) :            // MULTIPLY
