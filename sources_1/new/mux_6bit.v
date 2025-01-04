@@ -21,10 +21,10 @@
 
 
 module mux_6bit(
-    input [1:0] ALUOp,
+    input ALUOp,
     input [5:0] Opcode,
     input [5:0] Funct,
     output [5:0] out
     );
-    assign out = (ALUOp == 2'b11) ? Opcode : Funct;
+    assign out = (ALUOp == 1'b1) ? Opcode : Funct;
 endmodule

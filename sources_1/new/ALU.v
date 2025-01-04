@@ -41,6 +41,7 @@ module ALU(
                     (option == 4'b1010) ? $signed(oprd1) >>> oprd2[4:0] : // SRA (Arithmetic Shift Right)
                     (option == 4'b1100) ? ~(oprd1 | oprd2) :           // NOR
                     (option == 4'b1101) ? (oprd2 << 16) :              // lui
+                    (option == 4'b1110) ? ((oprd1 != oprd2) ? 32'b0 : 32'b1) : //BNE
                     (option == 4'b1111) ? oprd1 :                      // MOVE
                     32'b0;                                             // Default case: 0
     

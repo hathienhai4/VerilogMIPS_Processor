@@ -27,7 +27,7 @@ wire [5:0] Control_input;
 wire [4:0] reg1;
 wire [4:0] reg2;
 wire RegDst;
-//wire [4:0] write_reg;
+wire [4:0] write_reg;
 wire [31:0] write_data;
 wire RegWrite;
 wire [31:0] read_reg1;
@@ -60,7 +60,7 @@ Control_input,
 reg1,
 reg2,
 RegDst,
-//write_reg,
+write_reg,
 write_data,
 RegWrite,
 read_reg1,
@@ -92,6 +92,6 @@ initial begin
 clk = 0;
 forever #1 clk = ~clk;
 end
-initial #5000 $finish;
+initial #53 $finish;
     
 endmodule
