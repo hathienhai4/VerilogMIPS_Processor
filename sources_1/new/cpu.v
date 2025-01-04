@@ -60,7 +60,7 @@ output reg [31:0] cpu_IM_out
 `endif
     );
     
-reg [31:0] pc_in = 32'h00000000;
+reg [31:0] pc_in = 32'h00400000;
 wire [31:0] pc_out; 
 PC_counter PC (.pc_in(pc_in), .pc_out(pc_out));
 
@@ -114,11 +114,21 @@ ShiftLeft_2bit SHIFT1 (.a(sign_extend_out), .out(shift_left));
 adder_32bit ADD1 (.a(adder0), .b(shift_left), .carry_in(1'b0), .sum(adder1),.c_out(carry_out[1]));
 
 wire [3:0] ALU_Operation;
-ALUControl AC0 (.ALUOp(ALUOp), .Function(IM_out[5:0]), .ALU_Operation(ALU_Operation));
+wire [5:0] outALUControl;
+mux_6bit MUX5 (.ALUOp(ALUOp), .Opcode(IM_out[31:26]), .Funct(IM_out[5:0]), .out(outALUControl));
+ALUControl AC0 (.ALUOp(ALUOp), .Function(outALUControl), .ALU_Operation(ALU_Operation));
+
+wire [31:0] oprd1;
+mux_32bit MUX7(
+    .control((IM_out[31:26] == 6'b000000) && ((IM_out[5:0] == 6'b000000) || (IM_out[5:0] == 6'b000010))),
+    .in1(read_data[0]),
+    .in2(IM_out[10:6]),
+    .out(oprd1)
+);
 
 wire zero;
 wire [31:0] ALU_result;
-ALU ALU0 (.oprd1(read_data[0]), .oprd2(oprd2), .option(ALU_Operation), .zero(zero), .result(ALU_result));
+ALU ALU0 (.oprd1(oprd1), .oprd2(oprd2), .option(ALU_Operation), .zero(zero), .result(ALU_result));
 
 wire PCSrc;
 and AND0 (PCSrc, Branch, zero);
