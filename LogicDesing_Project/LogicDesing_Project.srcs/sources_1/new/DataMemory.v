@@ -36,15 +36,15 @@ module DataMemory(
             DMemory[i] <= 32'b0;
         end            
     end
-    assign ReadData = (MemRead == 1'b1) ? DMemory[{2'b00, Address[31:2]}] : 32'bz;    
+    assign ReadData = (MemRead == 1'b1) ? DMemory[{2'b00, Address[15:2]}] : 32'bz;    
     always @(posedge clk)
     begin
         if (MemWrite == 1'b1)
         begin
-            DMemory[{2'b00,Address[31:2]}] = WriteData;
+            DMemory[{2'b00,Address[15:2]}] = WriteData;
             $display("Time :",$time);
             $display("write data",WriteData);
-            $display("write addr",Address[31:2]);
+            $display("write addr",Address[15:2]);
             file = $fopen("E:\\LogicDesign_Project\\LogicDesing_Project\\LogicDesing_Project.output\\mem_file.txt","w");
             for(i = 0; i < 1024; i = i + 1) begin
                 $fwrite(file,"%h\n",DMemory[i]);
