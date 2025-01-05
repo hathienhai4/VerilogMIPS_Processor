@@ -51,7 +51,7 @@ module Control_unit(
                       (control == 6'b001101) || (control == 6'b001111) || 
                       (control == 6'b001001) || (control == 6'b001010) ||
                       (control == 6'b001001) || (control == 6'b001110) ||
-                      (control == 6'b000011); // Lệnh ghi vào thanh ghi
+                      (control == 6'b000011) || (control == 6'b011100); // Lệnh ghi vào thanh ghi
                       
     assign Jump     = (control == 6'b000010) || (control == 6'b000011); // Lệnh jump và jal
 

@@ -35,7 +35,7 @@ output reg [31:0] cpu_read_reg1,
 output reg [31:0] cpu_read_reg2,
 //output reg [15:0] cpu_sign_extend_input,
 output reg cpu_ALUSrc,
-//output reg [31:0] cpu_oprd1,
+output reg [31:0] cpu_oprd1,
 output reg [31:0] cpu_oprd2,
 output reg [1:0] cpu_ALUOp,
 output reg [3:0] cpu_ALU_Operation,
@@ -97,7 +97,7 @@ wire [4:0] pre_write_reg;
 mux_5bit MUX0 (.control(RegDst), .in1(IM_out[20:16]), .in2(IM_out[15:11]), .out(pre_write_reg));
 
 wire [4:0] write_reg; 
-mux_5bit MUX7 (.control(Jump), .in1(pre_write_reg), .in2(5'b11101), .out(write_reg));
+mux_5bit MUX7 (.control(Jump), .in1(pre_write_reg), .in2(5'b11111), .out(write_reg));
 
 wire [31:0] data_in;
 wire [31:0] write_data;
@@ -142,8 +142,10 @@ wire PCSrc;
 and AND0 (PCSrc, Branch, zero);
 
 wire [31:0] pc_addr;
+wire [31:0] pc_jump;
 mux_32bit MUX2 (.control(PCSrc), .in1(adder0), .in2(adder1), .out(pc_addr));
-mux_32bit MUX3 (.control(Jump), .in1(pc_addr), .in2(jump_addr), .out(pc_next));
+mux_32bit MUX3 (.control(Jump), .in1(pc_addr), .in2(jump_addr), .out(pc_jump));
+mux_32bit MUX9 (.control(IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000), .in1(pc_jump), .in2(read_data[0]), .out(pc_next));
 
 wire [31:0] read_mem;
 DataMemory DM0 (.MemWrite(MemWrite), .MemRead(MemRead),.clk(clk),
@@ -168,7 +170,7 @@ always @(posedge clk) begin
     cpu_read_reg2 <= read_data[1];
 //    cpu_sign_extend_input  <= IM_out[15:0];
     cpu_ALUSrc  <= ALUSrc;
-//    cpu_oprd1  <= read_data[0];
+    cpu_oprd1  <= oprd1;
     cpu_oprd2  <= oprd2;
     cpu_ALUOp  <= ALUOp;
     cpu_ALU_Operation  <= ALU_Operation;
