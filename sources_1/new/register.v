@@ -32,7 +32,11 @@ output reg [31:0] read_data2
     reg [31:0] registers [31:0]; // 32 thanh ghi 32-bit
     integer i, file;
     initial begin
-        $readmemh(`REG_FILE, registers);
+//        $readmemh(`REG_FILE, registers);
+        for(i = 0; i < 32; i = i + 1) begin
+            registers[i] = 32'b0;
+        end
+        registers[29] = 32'h00010000;
     end
     
     always @(*)begin
@@ -51,10 +55,10 @@ output reg [31:0] read_data2
 //            $display("at time: %t, read_reg1: %b",$time, write_reg);
 //            $display("at time: %t, read_data1: %b",$time, registers[write_reg]);
         end
-            file = $fopen("D:\\Vivado project\\Vivado_output\\register_file.txt","w");
-        for(i = 0; i < 32; i = i + 1) begin
-            $fwrite(file,"%h\n",registers[i]);
-        end
-        $fclose(file);
+//            file = $fopen("D:\\Vivado project\\Vivado_output\\register_file.txt","w");
+//        for(i = 0; i < 32; i = i + 1) begin
+//            $fwrite(file,"%h\n",registers[i]);
+//        end
+//        $fclose(file);
     end   
 endmodule

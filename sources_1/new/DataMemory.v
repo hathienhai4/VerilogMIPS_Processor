@@ -42,14 +42,14 @@ module DataMemory(
         if (MemWrite == 1'b1)
         begin
             DMemory[{2'b00,Address[15:2]}] = WriteData;
-            $display("Time :",$time);
-            $display("write data",WriteData);
-            $display("write addr",Address[15:2]);
-            file = $fopen("D:\\Vivado project\\Vivado_output\\mem_file.txt","w");
-            for(i = 0; i < 1024; i = i + 1) begin
-                $fwrite(file,"%h\n",DMemory[i]);
-            end
-            $fclose(file);
+//            $display("Time :",$time);
+//            $display("write data",WriteData);
+//            $display("write addr",Address[15:2]);
+//            file = $fopen("D:\\Vivado project\\Vivado_output\\mem_file.txt","w");
+//            for(i = 0; i < 1024; i = i + 1) begin
+//                $fwrite(file,"%h\n",DMemory[i]);
+//            end
+//            $fclose(file);
         end
         
     end 

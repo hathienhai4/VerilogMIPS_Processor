@@ -18,10 +18,9 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-`define SIMULATION
+
 
 module cpu(
-`ifdef SIMULATION
 input clk,
 output reg [31:0] cpu_IM_out,
 output reg [5:0] cpu_Control_input,
@@ -41,8 +40,8 @@ output reg [1:0] cpu_ALUOp,
 output reg [3:0] cpu_ALU_Operation,
 output reg cpu_zero,
 output reg [31:0] cpu_ALU_result,
-//output reg [31:0] cpu_adder0,
-//output reg [31:0] cpu_adder1,
+output reg [31:0] cpu_adder0,
+output reg [31:0] cpu_adder1,
 output reg cpu_Branch,
 output reg [31:0] cpu_Jump_addr,
 output reg cpu_PCSrc,
@@ -54,10 +53,6 @@ output reg cpu_MemRead,
 output reg cpu_MemWrite,
 output reg cpu_MemtoReg,
 output reg [31:0] cpu_read_mem
-`else
-input clk,
-output reg [31:0] cpu_IM_out   
-`endif
     );
     
 reg [31:0] pc_in = 32'h00400000;
@@ -102,8 +97,8 @@ mux_5bit MUX7 (.control(Jump), .in1(pre_write_reg), .in2(5'b11111), .out(write_r
 wire [31:0] data_in;
 wire [31:0] write_data;
 mux_32bit MUX8 (.control(Jump), .in1(data_in), .in2(adder0), .out(write_data));
-wire [4:0] RegWrite_enable;              
-mux_5bit MUX10 (.control(RegWrite && IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000), .in1(RegWrite), .in2(1'b0), .out(RegWrite_enable));              
+wire RegWrite_enable;              
+mux_1bit MUX10 (.control(RegWrite && IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000), .in1(RegWrite), .in2(1'b0), .out(RegWrite_enable));              
 wire [31:0] read_data [1:0];
 register REG0 (.clk(clk), .read_reg1(IM_out[25:21]), .read_reg2(IM_out[20:16]),
                .write_reg(write_reg), .write_data(write_data),.RegWrite(RegWrite_enable),
@@ -122,7 +117,7 @@ adder_32bit ADD1 (.a(adder0), .b(shift_left), .carry_in(1'b0), .sum(adder1),.c_o
 
 
 wire [5:0] outALUControl;
-mux_32bit MUX5 (.control(ALUOp == 2'b11), .in2(IM_out[31:26]), .in1(IM_out[5:0]), .out(outALUControl));
+mux_6bit MUX5 (.control(ALUOp == 2'b11), .in1(IM_out[5:0]), .in2(IM_out[31:26]), .out(outALUControl));
 
 wire [3:0] ALU_Operation;
 ALUControl AC0 (.ALUOp(ALUOp), .Function(outALUControl), .ALU_Operation(ALU_Operation));
@@ -131,7 +126,7 @@ wire [31:0] oprd1;
 mux_32bit MUX6(
     .control((IM_out[31:26] == 6'b000000) && ((IM_out[5:0] == 6'b000000) || (IM_out[5:0] == 6'b000010))),
     .in1(read_data[0]),
-    .in2(IM_out[10:6]),
+    .in2({27'b0,IM_out[10:6]}),
     .out(oprd1)
 );
 
@@ -157,7 +152,6 @@ mux_32bit MUX4 (.control(MemtoReg), .in1(ALU_result), .in2(read_mem), .out(data_
 
              
 always @(posedge clk) begin
-`ifdef SIMULATION
     pc_in <= pc_next;
     cpu_IM_out <= IM_out;
     cpu_Control_input <= IM_out[31:26];
@@ -177,8 +171,8 @@ always @(posedge clk) begin
     cpu_ALU_Operation  <= ALU_Operation;
     cpu_zero  <= zero;
     cpu_ALU_result  <= ALU_result;
-//    cpu_adder0  <= adder0;
-//    cpu_adder1  <= adder1;
+    cpu_adder0  <= adder0;
+    cpu_adder1  <= adder1;
     cpu_Branch  <= Branch;
     cpu_Jump_addr  <= jump_addr;
     cpu_PCSrc  <= PCSrc;
@@ -189,10 +183,6 @@ always @(posedge clk) begin
     cpu_MemRead  <= MemRead;
     cpu_MemWrite  <= MemWrite;
     cpu_MemtoReg  <= MemtoReg;
-    cpu_read_mem  <= read_mem;
-`else
-    pc_in <= pc_next;
-    cpu_IM_out <= IM_out;
-`endif 
+    cpu_read_mem  <= read_mem; 
 end   
 endmodule
