@@ -39,6 +39,7 @@ module ALUControl(
                                (Function == 6'b000010) ? 4'b0101 : // shift right logical (srl)
                                (Function == 6'b000011) ? 4'b1010 : // shift right arithmetic (sra)
                                (Function == 6'b001000) ? 4'b1111 : // jump register (jr)
+                               
                                4'bxxxx // undefined
                            ) :
                            (ALUOp == 2'b11) ? (

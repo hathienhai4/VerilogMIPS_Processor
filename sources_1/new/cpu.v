@@ -102,10 +102,11 @@ mux_5bit MUX7 (.control(Jump), .in1(pre_write_reg), .in2(5'b11111), .out(write_r
 wire [31:0] data_in;
 wire [31:0] write_data;
 mux_32bit MUX8 (.control(Jump), .in1(data_in), .in2(adder0), .out(write_data));
-              
+wire [4:0] RegWrite_enable;              
+mux_5bit MUX10 (.control(RegWrite && IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000), .in1(RegWrite), .in2(1'b0), .out(RegWrite_enable));              
 wire [31:0] read_data [1:0];
 register REG0 (.clk(clk), .read_reg1(IM_out[25:21]), .read_reg2(IM_out[20:16]),
-               .write_reg(write_reg), .write_data(write_data),.RegWrite(RegWrite),
+               .write_reg(write_reg), .write_data(write_data),.RegWrite(RegWrite_enable),
                .read_data1(read_data[0]), .read_data2(read_data[1]));
                
 wire [31:0] sign_extend_out;
@@ -165,7 +166,7 @@ always @(posedge clk) begin
     cpu_RegDst <= RegDst;
     cpu_write_reg <= write_reg;
     cpu_write_data <= write_data;
-    cpu_RegWrite <= RegWrite;
+    cpu_RegWrite <= RegWrite_enable;
     cpu_read_reg1 <= read_data[0];
     cpu_read_reg2 <= read_data[1];
 //    cpu_sign_extend_input  <= IM_out[15:0];

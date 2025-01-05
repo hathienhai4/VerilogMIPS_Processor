@@ -92,6 +92,6 @@ initial begin
 clk = 0;
 forever #1 clk = ~clk;
 end
-initial #200 $finish;
+initial #5000 $finish;
     
 endmodule
