@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 01/03/2025 05:51:11 PM
+// Create Date: 01/04/2025 05:54:52 PM
 // Design Name: 
 // Module Name: mux_6bit
 // Project Name: 
@@ -19,11 +19,12 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+
 module mux_6bit(
-    input [1:0] ALUOp,
-    input [5:0] Opcode,
-    input [5:0] Funct,
+    input control,
+    input [5:0] in1,
+    input [5:0] in2,
     output [5:0] out
-    );
-    assign out = (ALUOp == 2'b11) ? Opcode : Funct;
+);
+    assign out = (control == 1'b0) ? in1 : in2;
 endmodule

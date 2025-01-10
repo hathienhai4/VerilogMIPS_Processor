@@ -38,6 +38,8 @@ module ALUControl(
                                (Function == 6'b000000) ? 4'b0100 : // shift left logical (sll)
                                (Function == 6'b000010) ? 4'b0101 : // shift right logical (srl)
                                (Function == 6'b000011) ? 4'b1010 : // shift right arithmetic (sra)
+                               (Function == 6'b001000) ? 4'b1111 : // jump register (jr)
+                               
                                4'bxxxx // undefined
                            ) :
                            (ALUOp == 2'b11) ? (
@@ -48,6 +50,7 @@ module ALUControl(
                                (Function == 6'b001110) ? 4'b0011 : // xori
                                (Function == 6'b001111) ? 4'b1101 : // lui
                                (Function == 6'b000101) ? 4'b1110 : // bne
+                               (Function == 6'b011100) ? 4'b1000 : //mul
                                4'bxxxx // undefined
                            ) :
                            4'bxxxx; // undefined

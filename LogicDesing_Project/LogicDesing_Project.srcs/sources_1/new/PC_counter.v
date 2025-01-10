@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ps / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -26,6 +26,6 @@ output reg [31:0] pc_out
     );
 always @(pc_in)
 begin
-    pc_out <= pc_in;
+    pc_out = pc_in;
 end 
 endmodule

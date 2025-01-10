@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ps / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -24,11 +24,12 @@ module Instruction_memory(
 input [31:0] addr,            // Address đầu vào
 output reg [31:0] instruction     // Instruction đầu ra
 );
-    reg [31:0] instruction_mem [0:16384]; // 64 KB memory
+    reg [31:0] instruction_mem [0:16383]; // 64 KB memory
     initial begin
         $readmemh(`IM_FILE,instruction_mem);
     end 
     always @(addr) begin
-    instruction <= instruction_mem[addr[15:2]];
+    instruction = instruction_mem[addr[15:2]];
+//    $display("Instruction: %h", instruction);
     end
 endmodule

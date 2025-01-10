@@ -1,0 +1,34 @@
+//Lệnh yêu cầu
+add
+addi
+sub
+lw
+sw
+j
+beq
+and
+or
+nor
+andi
+ori
+slt
+slti
+//Extra instruction
+addiu
+addu
+subu
+subi
+lui
+ori
+la
+jr
+jal
+bne
+sltu
+xor
+xori
+sll
+srl
+sra
+mul
+

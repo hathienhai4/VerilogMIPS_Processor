@@ -27,7 +27,7 @@ module adder_16bit(
     output [15:0] sum,
     output c_out
     );
-    wire [3:0] carry; // carry signal
+    wire [2:0] carry; // carry signal
     adder_4bit add0(a[3:0], b[3:0], c_in, sum[3:0], carry[0]);
     adder_4bit add1(a[7:4], b[7:4], carry[0], sum[7:4], carry[1]);
     adder_4bit add2(a[11:8], b[11:8], carry[1], sum[11:8], carry[2]);

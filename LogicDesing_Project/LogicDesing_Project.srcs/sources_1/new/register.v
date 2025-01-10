@@ -26,30 +26,38 @@ input [4:0] read_reg2,
 input [4:0] write_reg,
 input [31:0] write_data,
 input RegWrite,
-output reg [31:0] read_data1,
-output reg [31:0] read_data2
+output wire [31:0] read_data1,
+output wire [31:0] read_data2
     );
     reg [31:0] registers [31:0]; // 32 thanh ghi 32-bit
     integer i, file;
     initial begin
-        $readmemh(`REG_FILE, registers);
+//        $readmemh(`REG_FILE, registers);
+        for(i = 0; i < 32; i = i + 1) begin
+            registers[i] = 32'b0;
+        end
+        registers[29] = 32'h00010000;
     end
     
-    always @(*)begin
-        read_data1 <= registers[read_reg1];
-        read_data2 <= registers[read_reg2];
-//        if (RegWrite == 1'b1)  
-//            registers[write_reg] <= write_data;
-//        read_data1 <= read_reg1;
-//        read_data2 <= read_reg2;
-//        $display("at time: %t, write: %b",$time, write_data);
-    end    
+//    always @(*)begin
+        
+////        if (RegWrite == 1'b1)  
+////            registers[write_reg] <= write_data;
+////        read_data1 <= read_reg1;
+////        read_data2 <= read_reg2;
+        
+//    end
+    assign read_data1 = registers[read_reg1];
+    assign read_data2 = registers[read_reg2];
+        
     always @(posedge clk) begin
+//        $display("Read_data1: %h",read_data1);
+//        $display("Read_data2: %h",read_data2);
         if (RegWrite == 1'b1) begin   
               registers[write_reg] <= write_data;
 //            read_data1 = registers[write_reg];
-//            $display("at time: %t, read_reg1: %b",$time, write_reg);
-//            $display("at time: %t, read_data1: %b",$time, registers[write_reg]);
+//            $display("Write_reg: %h",write_reg);
+//            $display("Write_data: %h",registers[write_reg]);
         end
             file = $fopen("E:\\LogicDesign_Project\\LogicDesing_Project\\LogicDesing_Project.output\\register_file.txt","w");
         for(i = 0; i < 32; i = i + 1) begin
@@ -58,4 +66,3 @@ output reg [31:0] read_data2
         $fclose(file);
     end   
 endmodule
-

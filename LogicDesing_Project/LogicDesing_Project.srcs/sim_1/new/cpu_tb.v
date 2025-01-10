@@ -19,6 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+
 module cpu_tb;
 reg clk;
 wire [31:0] IM_out;
@@ -26,7 +27,7 @@ wire [5:0] Control_input;
 wire [4:0] reg1;
 wire [4:0] reg2;
 wire RegDst;
-//wire [4:0] write_reg;
+wire [4:0] write_reg;
 wire [31:0] write_data;
 wire RegWrite;
 wire [31:0] read_reg1;
@@ -59,7 +60,7 @@ Control_input,
 reg1,
 reg2,
 RegDst,
-//write_reg,
+write_reg,
 write_data,
 RegWrite,
 read_reg1,
@@ -89,8 +90,21 @@ read_mem
 
 initial begin
 clk = 0;
-forever #1 clk = ~clk;
+forever begin
+#1 clk = ~clk;
 end
-initial #110 $finish;
+end
+//initial begin
+//#1
+//forever begin
+//#2 $display("Time: %t", $time - 2);
+//$display("Instruction: %h", IM_out);
+//$display("Read_data1: %h",read_reg1);
+//$display("Read_data2: %h",read_reg2);
+//$display("Write_reg: %h",write_reg);
+//$display("Write_data: %h",write_data);
+//end
+//end
+initial #5000 $finish;
     
 endmodule

@@ -1,4 +1,4 @@
-`timescale 1ns / 10ps
+`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -25,26 +25,25 @@ module DataMemory(
     output [31:0] ReadData
     );
     
-    reg [31:0] DMemory [1023:0];
-    integer i, baseAddr, offset, file;
+    reg [31:0] DMemory [16383:0];
+    integer i, file;
 //    wire [31:0] DM_Addr = Address[31:0];
     initial
     begin
-        $readmemh(`MEM_FILE, DMemory);
-        for (i = 100; i < 1024; i = i + 1)
+        for (i = 0; i < 16384; i = i + 1)
         begin
-            DMemory[i] <= 32'b0;
-        end            
+            DMemory[i] = 32'b0;
+        end
+        $readmemh(`MEM_FILE, DMemory);            
     end
     assign ReadData = (MemRead == 1'b1) ? DMemory[{2'b00, Address[15:2]}] : 32'bz;    
     always @(posedge clk)
     begin
         if (MemWrite == 1'b1)
         begin
-            DMemory[{2'b00,Address[15:2]}] = WriteData;
-            $display("Time :",$time);
-            $display("write data",WriteData);
-            $display("write addr",Address[15:2]);
+            DMemory[{2'b00,Address[15:2]}] <= WriteData;
+//            $display("write data",WriteData);
+//            $display("write addr",Address[15:2]);
             file = $fopen("E:\\LogicDesign_Project\\LogicDesing_Project\\LogicDesing_Project.output\\mem_file.txt","w");
             for(i = 0; i < 1024; i = i + 1) begin
                 $fwrite(file,"%h\n",DMemory[i]);

@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 12/19/2024 12:46:29 PM
+// Create Date: 01/05/2025 10:27:33 PM
 // Design Name: 
-// Module Name: adder_4bit
+// Module Name: mux_1bit
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,14 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module adder_32bit(
-    input [31:0] a,
-    input [31:0] b,
-    input carry_in,
-    output [31:0] sum,
-    output c_out
-    );
-    wire carry; // carry signal
-    adder_16bit add0(a[15:0], b[15:0], carry_in, sum[15:0], carry);
-    adder_16bit add1(a[31:16], b[31:16], carry, sum[31:16], c_out);       
+module mux_1bit(
+    input control,
+    input in1,
+    input in2,
+    output out
+);
+    assign out = (control == 1'b0) ? in1 : in2;
 endmodule

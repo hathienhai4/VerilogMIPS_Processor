@@ -19,7 +19,7 @@
 #NET  3N579                     LOC = T13 ; # Bank   0 - CFGBVS_0
 #NET  FPGA_PROG_B               LOC = T11 ; # Bank   0 - PROGRAM_B_0
 #NET  FPGA_TMS_BUF              LOC = G12 ; # Bank   0 - TMS_0
-create_clock -add -name sys_clk_pin -period 100.00 -waveform {0 50} [get_ports { clk }];#set
+create_clock -add -name sys_clk_pin -period 20.00 -waveform {0 10} [get_ports { clk }];#set
 #set_property PACKAGE_PIN R7 [get_ports PL_PJTAG_TDO_R]
 #set_property IOSTANDARD LVCMOS25 [get_ports PL_PJTAG_TDO_R]
 #set_property PACKAGE_PIN V10 [get_ports PL_PJTAG_TCK]
