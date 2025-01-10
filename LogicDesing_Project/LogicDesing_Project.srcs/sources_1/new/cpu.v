@@ -78,10 +78,12 @@ wire [1:0] ALUOp;
 wire ALUSrc;
 wire RegWrite;
 wire Jump;
+//wire Jump_jr;
+//assign Jump_jr = (IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000) ? 1 : 0;
 Control_unit CONTROL0 (.control(IM_out[31:26]),.RegDst(RegDst),.Branch(Branch),.MemtoReg(MemtoReg),
              .MemWrite(MemWrite), .MemRead(MemRead), .ALUOp(ALUOp), .ALUSrc(ALUSrc),
               .RegWrite(RegWrite), .Jump(Jump));
-              
+//assign Jump = Jump || Jump_jr;             
 wire [31:0] shift_instruction;              
 ShiftLeft_2bit SHIFT0 (.a({6'b0,IM_out[25:0]}), .out(shift_instruction));
 
@@ -176,7 +178,7 @@ always @(posedge clk) begin
     cpu_Branch  <= Branch;
     cpu_Jump_addr  <= jump_addr;
     cpu_PCSrc  <= PCSrc;
-    cpu_Jump  <= Jump;
+    cpu_Jump  <= Jump || (IM_out[31:26] == 6'b0 && IM_out[5:0] == 6'b001000);
     cpu_pc_next  <= pc_next;
     cpu_write_mem  <= read_data[1];
     cpu_addr_mem  <= ALU_result;
