@@ -34,7 +34,7 @@ module Control_unit(
     );
     
     // Gán giá trị cho các tín hiệu đầu ra dựa trên giá trị của `control`
-    assign RegDst   = (control == 6'b000000);                           // Lệnh R-type
+    assign RegDst   = (control == 6'b000000) || (control == 6'b011100);                           // Lệnh R-type
     assign Branch   = (control == 6'b000100) || (control == 6'b000101); // beq và bne
     assign MemtoReg = (control == 6'b100011);                           // Lệnh lw
     assign MemWrite = (control == 6'b101011);                           // Lệnh sw

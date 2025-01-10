@@ -105,6 +105,6 @@ end
 //$display("Write_data: %h",write_data);
 //end
 //end
-initial #5000 $finish;
+initial #32 $finish;
     
 endmodule

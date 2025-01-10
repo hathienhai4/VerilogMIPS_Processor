@@ -38,15 +38,7 @@ output wire [31:0] read_data2
         end
         registers[29] = 32'h00010000;
     end
-    
-//    always @(*)begin
-        
-////        if (RegWrite == 1'b1)  
-////            registers[write_reg] <= write_data;
-////        read_data1 <= read_reg1;
-////        read_data2 <= read_reg2;
-        
-//    end
+
     assign read_data1 = registers[read_reg1];
     assign read_data2 = registers[read_reg2];
         
